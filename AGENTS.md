@@ -28,3 +28,6 @@ use the editor.
   own key and store it in Secrets.
 - **Secrets.** Lovable manages them. Do not put secret values in the repo.
 <!-- LOVABLE:END -->
+
+- Keep scroll-driven warp ring geometry in a browser-safe math module and render live HTML cards through the reusable carousel; this preserves accessible portfolio content without canvas or server dependencies.
+- Keep both soundtracks in a page-level browser-only effect with one persistent sound control; use the next section's viewport boundary only for the hero track so continuous music remains uninterrupted across sections.

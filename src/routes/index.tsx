@@ -1,23 +1,57 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useRef } from "react";
+import { PageAudio } from "@/components/portfolio/hero-audio";
+import { Marquee } from "@/components/portfolio/marquee";
+import { Experience } from "@/components/portfolio/experience-dial";
+import { HERO_FONT_URL, HERO_SOCIAL_IMAGE_URL, SummitHero } from "@/components/portfolio/summit-hero";
+import { About, Awards, Contact, Work } from "@/components/portfolio/sections";
 
-// The home route ships no og:image, so serve-time hosting can inject the
-// project's social preview (explicit og:image or latest screenshot).
 export const Route = createFileRoute("/")({
+  head: () => ({
+    meta: [
+      { title: "Bavesh — CEO & Managing Director" },
+      {
+        name: "description",
+        content:
+          "Portfolio of Bavesh, a strategic entrepreneur building businesses in skill development, technology, education and media across India and the UAE.",
+      },
+      { property: "og:title", content: "Bavesh — CEO & Managing Director" },
+      {
+        property: "og:description",
+        content:
+          "Strategic works, ventures and experience of an entrepreneur focused on skills, innovation and youth empowerment.",
+      },
+      { property: "og:type", content: "website" },
+      { property: "og:image", content: HERO_SOCIAL_IMAGE_URL },
+      { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:image", content: HERO_SOCIAL_IMAGE_URL },
+    ],
+    links: [
+      { rel: "preload", href: HERO_FONT_URL, as: "font", type: "font/woff2", crossOrigin: "anonymous" },
+      { rel: "preconnect", href: "https://images.higgs.ai" },
+      { rel: "preconnect", href: "https://d8j0ntlcm91z4.cloudfront.net" },
+    ],
+  }),
   component: Index,
 });
 
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
 function Index() {
+  const nextSectionRef = useRef<HTMLDivElement>(null);
   return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
-    </div>
+    <main className="bg-background">
+      <PageAudio nextSectionRef={nextSectionRef} />
+      <SummitHero />
+      <div ref={nextSectionRef} className="hx-overlap">
+        <About />
+        <Awards />
+        <Marquee />
+        <Work />
+        <Experience />
+        <Contact />
+        <footer className="border-t border-border px-6 py-8 text-center text-xs text-muted-foreground">
+          © 2026 Bavesh. All rights reserved.
+        </footer>
+      </div>
+    </main>
   );
 }
