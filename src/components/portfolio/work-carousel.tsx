@@ -54,6 +54,25 @@ const smoothstep = (a: number, b: number, x: number) => {
   return t * t * (3 - 2 * t);
 };
 
+// Phones have far less vertical room than desktop: pull the ring up so the
+// front card begins just under the pinned title instead of drifting away from it.
+const PHONE_CARD_GAP = 20;
+
+function ringLift(ring: HTMLElement, stageH: number, titleBottom: number) {
+  const desktop = Math.min(72, stageH * 0.09);
+  if (window.innerWidth >= 640) return desktop;
+  const carousel = ring.querySelector<HTMLElement>(".work-warp-carousel");
+  const scene = ring.querySelector<HTMLElement>(".work-warp-scene");
+  const slot = ring.querySelector<HTMLElement>(".work-warp-slot");
+  const unit = carousel
+    ? Number(getComputedStyle(carousel).getPropertyValue("--warp-unit")) || 1
+    : 1;
+  const sceneH = scene?.offsetHeight || 420;
+  const slotTop = slot?.offsetTop ?? 30;
+  const cardTop = stageH / 2 + (slotTop - sceneH / 2) * unit;
+  return Math.min(desktop, titleBottom + PHONE_CARD_GAP - cardTop);
+}
+
 export function Work() {
   const wrapRef = useRef<HTMLDivElement | null>(null);
   const wordRef = useRef<HTMLHeadingElement | null>(null);
@@ -116,7 +135,7 @@ export function Work() {
         word.style.opacity = "1";
         // The ring eases down out of the title's way as the title rises.
         if (ringRef.current) {
-          const lift = rise * Math.min(72, stageH * 0.09);
+          const lift = rise * ringLift(ringRef.current, stageH, topPad + wordH);
           ringRef.current.style.transform = `translate3d(0px, ${lift.toFixed(2)}px, 0px)`;
         }
       }
