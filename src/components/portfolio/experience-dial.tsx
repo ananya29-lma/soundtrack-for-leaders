@@ -217,7 +217,6 @@ export function Experience() {
                 light="BUSINESS"
                 bold="JOURNEY"
                 eyebrow=""
-                sizeClass="text-3xl md:text-5xl"
                 wrapClass="mb-0"
               />
             </div>
