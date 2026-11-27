@@ -201,9 +201,6 @@ export function Experience() {
 
   return (
     <section id="experience" className="border-y border-border bg-background">
-      <div className="mx-auto max-w-6xl px-6 pt-28">
-        <SectionTitle light="BUSINESS" bold="JOURNEY" eyebrow="" />
-      </div>
       <div
         ref={wrapRef}
         className="relative"
