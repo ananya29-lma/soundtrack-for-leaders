@@ -57,6 +57,8 @@ const smoothstep = (a: number, b: number, x: number) => {
 export function Work() {
   const wrapRef = useRef<HTMLDivElement | null>(null);
   const wordRef = useRef<HTMLHeadingElement | null>(null);
+  const stageRef = useRef<HTMLDivElement | null>(null);
+  const ringRef = useRef<HTMLDivElement | null>(null);
   const letterRefs = useRef<(HTMLSpanElement | null)[]>([]);
   const carouselRef = useRef<WarpCarouselHandle>(null);
   const barRef = useRef<HTMLDivElement | null>(null);
@@ -100,19 +102,23 @@ export function Work() {
         el.style.opacity = String(e);
       });
 
-      // Phase 2 (0.42 -> 0.60): hold sharp, then recede and blur into backdrop watermark
+      // Phase 2 (0.38 -> 0.56): as the cards arrive, the word slides up and
+      // pins itself to the top of the stage at full size, sharp and fully visible.
       const word = wordRef.current;
       if (word) {
-        const recede = smoothstep(0.42, 0.6, p);
-        const exitDrift = smoothstep(0.78, 1.0, p);
-        const scale = 1 + recede * 0.08;
-        const rotX = Math.sin(recede * Math.PI) * 14;
-        const blurPx = recede * 11;
-        const opacity = 1 - recede * 0.66;
-        const shiftY = -exitDrift * 120;
-        word.style.transform = `translate3d(0px, ${shiftY}px, 0px) rotateX(${rotX}deg) scale(${scale})`;
-        word.style.filter = blurPx > 0.05 ? `blur(${blurPx.toFixed(2)}px)` : "none";
-        word.style.opacity = String(opacity);
+        const stageH = stageRef.current?.clientHeight || window.innerHeight;
+        const wordH = word.offsetHeight;
+        const topPad = Math.max(10, Math.round(stageH * 0.035));
+        const riseTo = topPad - (stageH - wordH) / 2;
+        const rise = easeOutCubic(clamp01((p - 0.38) / 0.18));
+        word.style.transform = `translate3d(0px, ${(rise * riseTo).toFixed(2)}px, 0px)`;
+        word.style.filter = "none";
+        word.style.opacity = "1";
+        // The ring eases down out of the title's way as the title rises.
+        if (ringRef.current) {
+          const lift = rise * Math.min(72, stageH * 0.09);
+          ringRef.current.style.transform = `translate3d(0px, ${lift.toFixed(2)}px, 0px)`;
+        }
       }
 
       carouselRef.current?.setProgress(scrollRingProgress(p), smoothstep(0.34, 0.44, p));
@@ -164,7 +170,10 @@ export function Work() {
     <section id="work" className="border-y border-border bg-background">
       <div ref={wrapRef} className="relative h-[400vh]">
         <div className="work-stage sticky top-0 flex h-screen w-full items-center justify-center overflow-hidden">
-          <div className="work-rise-stage pointer-events-none absolute inset-0 flex items-center justify-center px-3 sm:px-6">
+          <div
+            ref={stageRef}
+            className="work-rise-stage pointer-events-none absolute inset-0 flex items-center justify-center px-3 sm:px-6"
+          >
             <h2
               ref={wordRef}
               aria-label="SPECIALIZATION"
@@ -185,7 +194,7 @@ export function Work() {
             </h2>
           </div>
 
-          <div className="relative z-10 h-full w-full">
+          <div ref={ringRef} className="relative z-10 h-full w-full">
             <WarpCarousel ref={carouselRef} ariaLabel="Specializations" onFrontChange={setFront}>
               {projects.map((project, index) => (
                   <WorkGlassCard
