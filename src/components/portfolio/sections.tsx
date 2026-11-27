@@ -410,7 +410,7 @@ export function About() {
       <div className="relative mx-auto max-w-6xl px-6 py-28">
         <SectionTitle light="About" bold="Me" />
         <div className="max-w-3xl text-left">
-          <ScrollRevealParagraph text="I have been working on building businesses and initiatives focused on skill development, technology, entrepreneurship, and creating opportunities for young people. I strongly believe that India’s greatest strength is its young population, and I want to contribute by helping young people develop practical skills, become employable, and pursue entrepreneurship. As a strategic-minded entrepreneur, my goal is to build organizations that create employment, encourage innovation, and contribute meaningfully to India’s economic and social development." />
+          <ScrollRevealParagraph text="I am passionate about building businesses that empower young people through skill development, technology, and entrepreneurship. My goal is to create opportunities, promote innovation, generate employment, and contribute to India’s economic and social growth." />
         </div>
         <div ref={statsRef} className="mt-16 grid grid-cols-3 gap-4 sm:gap-10">
           {aboutStats.map((stat, i) => (
